@@ -375,6 +375,14 @@ public class Model {
 		return result;
 	}
 	
+	public List<Veicolo> Simula(int numMezzi, int numConsMax) {
+		double tempoMassimo=800.0;
+		Simulator sim=new Simulator(this.grafo,this.magazzino,tempoMassimo);
+		sim.init(numMezzi, numConsMax);
+		sim.run();
+		return sim.getVeicoli();
+	}
+	
 	
 
 }
