@@ -1,7 +1,6 @@
 package it.polito.tdp.SimulazioneTrasporti.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +15,8 @@ import it.polito.tdp.SimulazioneTrasporti.db.TrasportiDao;
 public class Model {
 	private Graph<Comuni,DefaultWeightedEdge> grafo;
 	private TrasportiDao dao;
-	private List<Comuni> listaComuni;
 	private Map<Integer,Comuni> idMap;
-	
+	private List<Comuni> listaComuni;
 	private List<Comuni> best;
 	private Comuni magazzino;
 	
@@ -29,11 +27,8 @@ public class Model {
 	public Graph<Comuni,DefaultWeightedEdge> creaGrafo(String nomeRegione,int numeroConsegne,Comuni magazzino ) {
 		this.magazzino=magazzino;
 		idMap=new HashMap<Integer,Comuni>();
-		
-//		Valuta se mettere void listaComuni
-		
-		listaComuni=new ArrayList<Comuni>(dao.listaComuni(nomeRegione,idMap));
 		grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);
+		listaComuni=new ArrayList<Comuni>(dao.listaComuni(nomeRegione,idMap));
 		
 //		AGGIUNGO VERTICI
 //		Con while evito che i duplicati vengano considerati come consegna
