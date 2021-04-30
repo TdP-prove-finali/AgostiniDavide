@@ -30,16 +30,16 @@ public class Model {
 	}
 	
 	public List<Comuni> comuni(Regione regione) {
-		List<Comuni> lista=new ArrayList<Comuni>();
+		idMap=new HashMap<Integer,Comuni>();
 		listaComuni=new ArrayList<Comuni>(dao.listaComuni(regione.getNomeRegione(),idMap));
-		return lista;
+		return listaComuni;
 	}
 	
 	
 	
 	public Graph<Comuni,DefaultWeightedEdge> creaGrafo(Regione regione,int numeroConsegne,Comuni magazzino ) {
 		this.magazzino=magazzino;
-		idMap=new HashMap<Integer,Comuni>();
+//		idMap=new HashMap<Integer,Comuni>();
 		grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);
 //		listaComuni=new ArrayList<Comuni>(dao.listaComuni(regione.getNomeRegione(),idMap));
 //		AGGIUNGO VERTICI

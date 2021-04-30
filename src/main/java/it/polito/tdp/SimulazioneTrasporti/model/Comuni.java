@@ -80,6 +80,15 @@ public class Comuni {
 			return false;
 		return true;
 	}
+
+
+
+	@Override
+	public String toString() {
+		return nomeComune;
+	}
+	
+	
 	
 	
 	

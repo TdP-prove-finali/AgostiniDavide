@@ -44,6 +44,12 @@ public class Regione {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return nomeRegione;
+	}
+	
+	
 	
 	
 }

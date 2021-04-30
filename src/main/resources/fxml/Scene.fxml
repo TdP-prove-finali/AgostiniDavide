@@ -83,7 +83,7 @@
                               <Font name="Calibri Light" size="15.0" />
                            </font>
                         </Label>
-                        <TextField maxWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtNumConsegne" maxWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" />
@@ -110,15 +110,31 @@
                         <Font name="Calibri Bold" size="14.0" />
                      </font>
                   </Label>
-                  <TextArea maxWidth="290.0" prefHeight="242.0" prefWidth="289.0">
+                  <Label text="Per effettuare la simulazione o l'ottimizzazione in un primo&#10;momento si deve scegliere la regione nel quale si intende lavorare.&#10;Successivamente si inserisce un magazzino principale tra i comuni della regione indicata ed il numero di consegne che si vogliono effettuare.&#10;Poi si sceglie se lavorare con Simulazione o Ottimizzazione.&#10;Nel primo caso devono essere inseriti il numero di veicoli ed il numero massimo di consegna per veicolo.&#10;Nel secondo caso devono essere indicati il comune di destinazione nel quale si vuole consegnare l'ordine finale e il tempo massimo impiegabile." textFill="SNOW">
                      <VBox.margin>
-                        <Insets left="15.0" right="15.0" top="5.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                      <font>
-                        <Font name="Calibri Light" size="13.0" />
+                        <Font name="Calibri Light" size="12.0" />
                      </font>
-                  </TextArea>
+                  </Label>
+                  <Line endX="150.0" startX="-100.0" stroke="#bdbdbd">
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <Button fx:id="btnClear" maxWidth="260.0" mnemonicParsing="false" onAction="#doClear" prefHeight="100.0" text="Ricomincia">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="30.0" right="30.0" top="5.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="Ebrima" size="24.0" />
+                     </font>
+                  </Button>
                </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
             </VBox>
             <VBox prefHeight="650.0" prefWidth="580.0" style="-fx-background-color: #eeeeee;">
                <children>
@@ -163,7 +179,7 @@
                               <Font name="Calibri Light" size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="txtNumConsegne" prefWidth="70.0">
+                        <TextField fx:id="txtNumConsegneMax" prefWidth="70.0">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
