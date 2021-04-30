@@ -24,12 +24,24 @@ public class Model {
 		dao=new TrasportiDao();
 	}
 	
-	public Graph<Comuni,DefaultWeightedEdge> creaGrafo(String nomeRegione,int numeroConsegne,Comuni magazzino ) {
+	public List<Regione> regioni() {
+		List<Regione> lista=new ArrayList<Regione>(dao.listaRegioni());
+		return lista;
+	}
+	
+	public List<Comuni> comuni(Regione regione) {
+		List<Comuni> lista=new ArrayList<Comuni>();
+		listaComuni=new ArrayList<Comuni>(dao.listaComuni(regione.getNomeRegione(),idMap));
+		return lista;
+	}
+	
+	
+	
+	public Graph<Comuni,DefaultWeightedEdge> creaGrafo(Regione regione,int numeroConsegne,Comuni magazzino ) {
 		this.magazzino=magazzino;
 		idMap=new HashMap<Integer,Comuni>();
 		grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);
-		listaComuni=new ArrayList<Comuni>(dao.listaComuni(nomeRegione,idMap));
-		
+//		listaComuni=new ArrayList<Comuni>(dao.listaComuni(regione.getNomeRegione(),idMap));
 //		AGGIUNGO VERTICI
 //		Con while evito che i duplicati vengano considerati come consegna
 		int i=0;
@@ -71,7 +83,7 @@ public class Model {
 //		
 //		Strada 2
 		
-		switch(nomeRegione) {
+		switch(regione.getNomeRegione()) {
 		case "Liguria":
 			for(Comuni c:grafo.vertexSet()) {
 				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiLiguria(Integer.toString(c.getCodiceInteroComune())));
@@ -293,7 +305,7 @@ public class Model {
 		int numArchi=(int) ( (numeroConsegne * (numeroConsegne+1) )/2);
 		if(grafo.edgeSet().size()!=numArchi) {
 			System.out.println("Riciclo per presenza isola/e");
-			this.creaGrafo(nomeRegione, numeroConsegne, magazzino);
+			this.creaGrafo(regione, numeroConsegne, magazzino);
 		}
 			
 		return grafo;

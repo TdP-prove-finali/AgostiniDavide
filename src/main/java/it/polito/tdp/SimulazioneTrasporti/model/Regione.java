@@ -9,7 +9,6 @@ public class Regione {
 	 * @param nomeRegione
 	 */
 	public Regione(int codiceRegione, String nomeRegione) {
-		super();
 		this.codiceRegione = codiceRegione;
 		this.nomeRegione = nomeRegione;
 	}

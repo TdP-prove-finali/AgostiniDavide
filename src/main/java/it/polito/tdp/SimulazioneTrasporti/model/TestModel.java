@@ -17,9 +17,10 @@ public class TestModel {
 		Model m = new Model();
 		
 		Comuni c=new Comuni(7, "008001", "Airole", "Liguria", 8001);
+		Regione r=new Regione(7,"Liguria");
 		
 		Graph<Comuni,DefaultWeightedEdge> grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);
-		grafo=m.creaGrafo("Liguria", 10, c);
+		grafo=m.creaGrafo(r, 10, c);
 		
 		
 		for(Comuni d:grafo.vertexSet()) {
