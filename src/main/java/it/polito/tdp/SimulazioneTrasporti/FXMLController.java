@@ -80,6 +80,9 @@ public class FXMLController {
     @FXML // fx:id="txtNumConsegneMax"
     private TextField txtNumConsegneMax; // Value injected by FXMLLoader
     
+    @FXML // fx:id="txtComuni"
+    private TextArea txtComuni; // Value injected by FXMLLoader
+    
     @FXML
     void doRegione(ActionEvent event) {
 		this.btnOttimizza.setDisable(true);
@@ -121,20 +124,34 @@ public class FXMLController {
     	try {
 			int numConsegne = Integer.parseInt(numero);
 			grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);
+			this.model.setN(0);
 			grafo=this.model.creaGrafo(regione, numConsegne, m);
-			txtResultSimula.appendText("Ordini effettuati!\nGrafo caricato con "+grafo.vertexSet().size()+" vertici e con "+grafo.edgeSet().size()+" archi (compreso magazzino)");
-			txtResultOttimizza.appendText("Ordini effettuati!\nGrafo caricato con "+grafo.vertexSet().size()+" vertici e con "+grafo.edgeSet().size()+" archi (compreso magazzino)");
+			if(grafo.vertexSet().size()>0) {
+				txtResultSimula.appendText("Ordini effettuati!\nGrafo caricato con "+grafo.vertexSet().size()+" vertici e con "+grafo.edgeSet().size()+" archi (compreso magazzino)");
+				txtResultOttimizza.appendText("Ordini effettuati!\nGrafo caricato con "+grafo.vertexSet().size()+" vertici e con "+grafo.edgeSet().size()+" archi (compreso magazzino)");
+		    	this.txtComuni.clear();
+				for(Comuni d:grafo.vertexSet()) {
+					if(!d.equals(magazzino)) {
+						this.txtComuni.appendText(d.getNomeComune()+"\n");
+						this.boxDestinazione.getItems().add(d);
+					}
+				}
+				this.btnOttimizza.setDisable(false);
+				this.btnSimula.setDisable(false);
+		    	this.btnOrdini.setDisable(true);
+			} else {
+				txtResultSimula.appendText("Ordini non effettuati, assicurati di aver inserito un valore almeno >0\n");
+				txtResultOttimizza.appendText("Ordini non effettuati, assicurati di aver inserito un valore almeno >0\n");
+			}
 //			System.out.format("Grafo caricato con %d vertici %d archi \n", grafo.vertexSet().size(), grafo.edgeSet().size());
-			
-
-			this.btnOttimizza.setDisable(false);
-			this.btnSimula.setDisable(false);
-	    	this.btnOrdini.setDisable(true);
 			
 		} catch (NumberFormatException ex) {
 			txtResultSimula.appendText("ERRORE: Devi inserire un numero\n");
 			txtResultOttimizza.appendText("ERRORE: Devi inserire un numero\n");
 			return;
+		} catch (Exception e) {
+			txtResultSimula.appendText("Troppi tentativi di creazione grafo effettuati\nAssicurati di aver scelto un comune non presente su un isola e con collegamento via terra al resto della regione, se il problema persiste diminuisci il numero di ordini effettati");
+			txtResultOttimizza.appendText("Troppi tentativi di creazione grafo effettuati\nAssicurati di aver scelto un comune non presente su un isola e con collegamento via terra al resto della regione, se il problema persiste diminuisci il numero di ordini effettati");
 		}
     	
 
@@ -143,6 +160,27 @@ public class FXMLController {
     @FXML
     void doOttimizzazione(ActionEvent event) {
     	
+    	this.txtResultOttimizza.clear();
+    	String numero=this.txtMinutiMax.getText();
+    	Comuni d=this.boxDestinazione.getValue();
+    	if(d==null) {
+    		txtResultOttimizza.appendText("Scegli una destinazione per continuare!\n");
+    		return;
+    	}
+    	try {
+    		double numMinuti = Double.parseDouble(numero);
+        	List<Consegna> listaComuni=new ArrayList<Consegna>(model.percorsoMigliore(d, numMinuti));
+        	this.txtResultOttimizza.appendText("Numero Comuni Raggiunti: "+listaComuni.size()+"\n");
+        	for(Consegna cons: listaComuni) {
+    			this.txtResultOttimizza.appendText("Comune: "+cons.getComune().getNomeComune()+"\t Tempo (minuti): "+cons.getTime()+"\n");
+        	}
+    	} catch (NumberFormatException ex) {
+    		txtResultOttimizza.appendText("ERRORE: Devi inserire un numero\n");
+    		return;
+    	}
+    	
+    	
+    	
     }
 
     @FXML
@@ -150,30 +188,28 @@ public class FXMLController {
     	String numVeic=this.txtNumVeicoli.getText();
     	String numCons=this.txtNumConsegneMax.getText();
     	this.txtResultSimula.clear();
-    	this.txtResultOttimizza.clear();
+    	
+    	this.txtResultSimula.appendText("Numero ordini: "+(grafo.vertexSet().size()-1)+"\n");
     	
     	try {
 			int numConsegneMax = Integer.parseInt(numCons);
 			int numVeicoli = Integer.parseInt(numVeic);
 
 	    	List<Veicolo> listaVeicoli=new ArrayList<Veicolo>(model.Simula(numVeicoli,numConsegneMax));
+	    	int i=0;
 	    	for (Veicolo v:listaVeicoli) {
-	    		this.txtResultSimula.appendText("Id veicolo: "+v.getIdVeicolo()+"\tNumero consegne effettuate: "+v.getListaConsegna().size()+"\n") ;
+	    		i=i+v.getListaConsegna().size();
+	    		this.txtResultSimula.appendText("\nId veicolo: "+v.getIdVeicolo()+"\tNumero consegne effettuate: "+v.getListaConsegna().size()+"\n") ;
 	    		for(Consegna cons:v.getListaConsegna()) {
 	    			this.txtResultSimula.appendText("Comune: "+cons.getComune().getNomeComune()+"\t Tempo (minuti): "+cons.getTime()+"\n");
 	    		}
 	    	}
+	    	int nonEffe=(grafo.vertexSet().size()-1)-i;
+	    	this.txtResultSimula.appendText("\nNumero consegne non effettuate: "+nonEffe);
 		} catch (NumberFormatException ex) {
 			txtResultSimula.appendText("ERRORE: Devi inserire un numero per le consegne e i veicoli\n");
 			return;
 		}
-//
-//    	for (Veicolo v:lista) {
-//    		System.out.println(v.getIdVeicolo()+" "+v.getListaConsegna().size()) ;
-//    		for(Consegna cons:v.getListaConsegna()) {
-//    			System.out.println(cons.getComune().getNomeComune()+" "+cons.getTime());
-//    		}
-//    	}
     }
     
     @FXML
@@ -182,6 +218,7 @@ public class FXMLController {
     	this.boxDestinazione.getItems().clear();
     	this.txtResultOttimizza.clear();
     	this.txtResultSimula.clear();
+    	this.txtComuni.clear();
     	
     	btnRegione.setDisable(true);
     	this.btnOrdini.setDisable(true);
@@ -203,6 +240,7 @@ public class FXMLController {
         assert txtNumConsegneMax != null : "fx:id=\"txtNumConsegneMax\" was not injected: check your FXML file 'Scene.fxml'.";
         assert btnSimula != null : "fx:id=\"btnSimula\" was not injected: check your FXML file 'Scene.fxml'.";
         assert txtResultSimula != null : "fx:id=\"txtResultSimula\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtComuni != null : "fx:id=\"txtComuni\" was not injected: check your FXML file 'Scene.fxml'.";
         assert boxDestinazione != null : "fx:id=\"boxDestinazione\" was not injected: check your FXML file 'Scene.fxml'.";
         assert txtMinutiMax != null : "fx:id=\"txtMinutiMax\" was not injected: check your FXML file 'Scene.fxml'.";
         assert btnOttimizza != null : "fx:id=\"btnOttimizza\" was not injected: check your FXML file 'Scene.fxml'.";

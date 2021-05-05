@@ -198,11 +198,23 @@
                      </font>
                   </Button>
                   <Line endX="400.0" startX="-100.0" stroke="#388e3c" />
-                  <TextArea fx:id="txtResultSimula" prefHeight="171.0" prefWidth="550.0">
+                  <HBox prefHeight="171.0" prefWidth="550.0">
                      <VBox.margin>
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                      </VBox.margin>
-                  </TextArea>
+                     <children>
+                        <TextArea fx:id="txtResultSimula" editable="false" prefHeight="171.0" prefWidth="475.0">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </TextArea>
+                        <TextArea fx:id="txtComuni" editable="false" prefHeight="200.0" prefWidth="200.0">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </TextArea>
+                     </children>
+                  </HBox>
                   <Line endX="480.0" startX="-100.0" stroke="#212121" />
                   <Label layoutX="270.0" layoutY="15.0" text="Ottimizzazione singolo percorso">
                      <font>
@@ -264,7 +276,7 @@
                      </font>
                   </Button>
                   <Line endX="400.0" layoutX="111.0" layoutY="140.0" startX="-100.0" stroke="#388e3c" />
-                  <TextArea fx:id="txtResultOttimizza" layoutX="25.0" layoutY="152.0" prefHeight="171.0" prefWidth="550.0">
+                  <TextArea fx:id="txtResultOttimizza" editable="false" layoutX="25.0" layoutY="152.0" prefHeight="171.0" prefWidth="550.0">
                      <VBox.margin>
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                      </VBox.margin>

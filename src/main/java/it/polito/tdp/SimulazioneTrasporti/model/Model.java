@@ -17,8 +17,10 @@ public class Model {
 	private TrasportiDao dao;
 	private Map<Integer,Comuni> idMap;
 	private List<Comuni> listaComuni;
-	private List<Comuni> best;
+	private List<Consegna> best;
 	private Comuni magazzino;
+	
+	private int n;
 	
 	public Model() {
 		dao=new TrasportiDao();
@@ -37,7 +39,7 @@ public class Model {
 	
 	
 	
-	public Graph<Comuni,DefaultWeightedEdge> creaGrafo(Regione regione,int numeroConsegne,Comuni magazzino ) {
+	public Graph<Comuni,DefaultWeightedEdge> creaGrafo(Regione regione,int numeroConsegne,Comuni magazzino ) throws Exception {
 		this.magazzino=magazzino;
 //		idMap=new HashMap<Integer,Comuni>();
 		grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);
@@ -45,14 +47,22 @@ public class Model {
 //		AGGIUNGO VERTICI
 //		Con while evito che i duplicati vengano considerati come consegna
 		int i=0;
+		ArrayList<Comuni> listaComuniNo=new ArrayList<Comuni>(listaComuni);
 		while(i<numeroConsegne ) 
 		{
-			int casuale=(int) (Math.random()*idMap.size());
-			Comuni vertice= idMap.get(casuale);
+			int casuale=(int) (Math.random()*listaComuniNo.size());
+			Comuni vertice= listaComuniNo.get(casuale);
+//			Aggiungo magazzino
+			grafo.addVertex(magazzino);
+			
 			if(!grafo.containsVertex(vertice)) {
 				grafo.addVertex(vertice);
-				i++;
+				listaComuniNo.remove(vertice);
 			}
+			else {
+				listaComuniNo.get(casuale);
+			}
+			i++;
 		}
 			
 //		for(int i=0;i<numeroConsegne;i++) {
@@ -64,8 +74,7 @@ public class Model {
 //		}
 		
 		
-//		Aggiungo magazzino
-		grafo.addVertex(magazzino);
+
 		
 //		AGGIUNGO ARCHI
 		
@@ -299,12 +308,39 @@ public class Model {
 					}
 				}
 			};
+		case "Piemonte":
+			for(Comuni c:grafo.vertexSet()) {
+				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiPiemonte(Integer.toString(c.getCodiceInteroComune())));
+				for(Comuni dest:grafo.vertexSet()) {
+					if(!c.equals(dest)) {
+						String var=Integer.toString(dest.getCodiceInteroComune());
+						if(mappaColl.containsKey(var))
+							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+					}
+				}
+			};
+		case "Lombardia":
+			for(Comuni c:grafo.vertexSet()) {
+				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiLombardia(Integer.toString(c.getCodiceInteroComune())));
+				for(Comuni dest:grafo.vertexSet()) {
+					if(!c.equals(dest)) {
+						String var=Integer.toString(dest.getCodiceInteroComune());
+						if(mappaColl.containsKey(var))
+							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+					}
+				}
+			};
 			break;
+		}
+		
+		if(n>=4) {
+			throw new Exception("Troppi tentativi");
 		}
 		
 		int numArchi=(int) ( (numeroConsegne * (numeroConsegne+1) )/2);
 		if(grafo.edgeSet().size()!=numArchi) {
 			System.out.println("Riciclo per presenza isola/e");
+			n++;
 			this.creaGrafo(regione, numeroConsegne, magazzino);
 		}
 			
@@ -390,6 +426,46 @@ public class Model {
 		return sim.getVeicoli();
 	}
 	
+	public List<Consegna> percorsoMigliore(Comuni destinazione, double tempoMax) {
+		List<Consegna> parziale=new ArrayList<>();
+		this.best=new ArrayList<>();
+		Consegna c=new Consegna(this.magazzino, 0.0);
+		parziale.add(c);
+		trovaRicorsivo(destinazione, parziale, tempoMax, 0.0);
+		return this.best;
+	}
 	
+	private void trovaRicorsivo (Comuni destinazione, List<Consegna> parziale, double tempoMax,double time) {
+		if(time>tempoMax) {
+			return;
+		}
+//		CASO TERMINALE
+		if(parziale.get(parziale.size()-1).getComune().equals(destinazione)) {
+			if(parziale.size()>this.best.size()) {
+				this.best=new ArrayList<Consegna>(parziale);
+			}
+			return;
+		}
+//		Scorro i vicini dell'ultimo vertice in parziale
+		for(Comuni vicino: Graphs.neighborListOf(this.grafo, parziale.get(parziale.size()-1).getComune() ) ) {
+			if(!parziale.contains(new Consegna(vicino,0.0))) {
+				DefaultWeightedEdge e=this.grafo.getEdge(parziale.get(parziale.size()-1).getComune(), vicino);
+//				Provo ad aggiungere
+				time+= (this.grafo.getEdgeWeight(e)+15.0);
+				parziale.add(new Consegna(vicino,time));
+//				Continuo ricorsione
+				this.trovaRicorsivo(destinazione, parziale,tempoMax, time);
+				
+				time-= (this.grafo.getEdgeWeight(e)+15);
+				parziale.remove(parziale.size()-1);
+			}
+		}
+	}
 
+	public void setN(int n) {
+		this.n = n;
+	}
+
+	
+	
 }
