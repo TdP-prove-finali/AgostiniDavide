@@ -1,6 +1,6 @@
 package it.polito.tdp.SimulazioneTrasporti.model;
 
-public class Comuni {
+public class Comuni implements Comparable<Comuni>{
 	
 	private int codiceRegione;
 	private String codiceComune;
@@ -86,6 +86,11 @@ public class Comuni {
 	@Override
 	public String toString() {
 		return nomeComune;
+	}
+
+	@Override
+	public int compareTo(Comuni o) {
+		return this.getNomeComune().compareTo(o.getNomeComune());
 	}
 	
 	

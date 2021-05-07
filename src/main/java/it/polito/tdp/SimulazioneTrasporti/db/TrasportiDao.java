@@ -543,102 +543,70 @@ public class TrasportiDao {
 	
 	public Map<String,Collegamento> mappaCollegamentiPiemonte(String codice) {
 		String sql1="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
-				"FROM piemonte1 " + 
-				"WHERE comune_partenza= ? ";
-		String sql2="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM piemonte2 " + 
-				"WHERE comune_partenza= ? ";
+				"WHERE comune_partenza= ? " + 
+				"UNION " + 
+				"SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
+				"FROM piemonte1 " + 
+				"WHERE comune_partenza= ?";
 		Map<String,Collegamento> result=new HashMap<>();
-		Connection conn1 = DBConnect.getConnection();
-		Connection conn2 = DBConnect.getConnection();
+		Connection conn = DBConnect.getConnection();
 
 		try {
-			PreparedStatement st1 = conn1.prepareStatement(sql1);
-			PreparedStatement st2 = conn2.prepareStatement(sql2);
-			
-			st1.setString(1, codice);
-			ResultSet res1 = st1.executeQuery();
-			
-			st2.setString(1, codice);
-			ResultSet res2 = st2.executeQuery();
+			PreparedStatement st = conn.prepareStatement(sql1);
+		
+			st.setString(1, codice);
+			st.setString(2, codice);
+			ResultSet res = st.executeQuery();
 
-			while (res1.next()) {
-				result.put(res1.getString("comune_arrivo") ,new Collegamento( res1.getString("comune_partenza"),res1.getString("comune_arrivo"),res1.getDouble("minuti_impiegati") ));
+			while (res.next()) {
+				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
-			while (res2.next()) {
-				result.put(res2.getString("comune_arrivo") ,new Collegamento( res2.getString("comune_partenza"),res2.getString("comune_arrivo"),res2.getDouble("minuti_impiegati") ));
-			}
-			conn1.close();
-			conn2.close();
+			conn.close();
 			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+//	m
 	
 	public Map<String,Collegamento> mappaCollegamentiLombardia(String codice) {
 		String sql1="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM lombardia1 " + 
-				"WHERE comune_partenza= ? ";
-		String sql2="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
+				"WHERE comune_partenza= ? " + 
+				"UNION " + 
+				"SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM lombardia2 " + 
-				"WHERE comune_partenza= ? ";
-		String sql3="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
+				"WHERE comune_partenza= ? " + 
+				"UNION " + 
+				"SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM lombardia3 " + 
-				"WHERE comune_partenza= ? ";
-		String sql4="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
+				"WHERE comune_partenza= ? " + 
+				"UNION " + 
+				"SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM lombardia4 " + 
 				"WHERE comune_partenza= ? ";
 		Map<String,Collegamento> result=new HashMap<>();
-		Connection conn1 = DBConnect.getConnection();
-		Connection conn2 = DBConnect.getConnection();
-		Connection conn3 = DBConnect.getConnection();
-		Connection conn4 = DBConnect.getConnection();
-
+		Connection conn = DBConnect.getConnection();
 		try {
-			PreparedStatement st1 = conn1.prepareStatement(sql1);
-			PreparedStatement st2 = conn2.prepareStatement(sql2);
-			PreparedStatement st3 = conn3.prepareStatement(sql3);
-			PreparedStatement st4 = conn4.prepareStatement(sql4);
 			
-			st1.setString(1, codice);
-			ResultSet res1 = st1.executeQuery();
+			PreparedStatement st = conn.prepareStatement(sql1);
 			
-			st2.setString(1, codice);
-			ResultSet res2 = st2.executeQuery();
-			
-			st3.setString(1, codice);
-			ResultSet res3 = st3.executeQuery();
-			
-			st4.setString(1, codice);
-			ResultSet res4 = st4.executeQuery();
+			st.setString(1, codice);
+			st.setString(2, codice);
+			st.setString(3, codice);
+			st.setString(4, codice);
+			ResultSet res = st.executeQuery();
 
-			while (res1.next()) {
-				result.put(res1.getString("comune_arrivo") ,new Collegamento( res1.getString("comune_partenza"),res1.getString("comune_arrivo"),res1.getDouble("minuti_impiegati") ));
+			while (res.next()) {
+				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
-			while (res2.next()) {
-				result.put(res2.getString("comune_arrivo") ,new Collegamento( res2.getString("comune_partenza"),res2.getString("comune_arrivo"),res2.getDouble("minuti_impiegati") ));
-			}
-			while (res3.next()) {
-				result.put(res3.getString("comune_arrivo") ,new Collegamento( res3.getString("comune_partenza"),res3.getString("comune_arrivo"),res3.getDouble("minuti_impiegati") ));
-			}
-			while (res4.next()) {
-				result.put(res4.getString("comune_arrivo") ,new Collegamento( res4.getString("comune_partenza"),res4.getString("comune_arrivo"),res4.getDouble("minuti_impiegati") ));
-			}
-			conn1.close();
-			conn2.close();
-			conn3.close();
-			conn4.close();
+			conn.close();
 			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	
-//	Lombardia e Piemonte mancanti: superano il milione di dati.
-	
 }

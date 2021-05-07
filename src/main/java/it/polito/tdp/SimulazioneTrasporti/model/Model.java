@@ -1,6 +1,7 @@
 package it.polito.tdp.SimulazioneTrasporti.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +29,14 @@ public class Model {
 	
 	public List<Regione> regioni() {
 		List<Regione> lista=new ArrayList<Regione>(dao.listaRegioni());
+		Collections.sort(lista);
 		return lista;
 	}
 	
 	public List<Comuni> comuni(Regione regione) {
 		idMap=new HashMap<Integer,Comuni>();
 		listaComuni=new ArrayList<Comuni>(dao.listaComuni(regione.getNomeRegione(),idMap));
+		Collections.sort(listaComuni);
 		return listaComuni;
 	}
 	
@@ -46,23 +49,20 @@ public class Model {
 //		listaComuni=new ArrayList<Comuni>(dao.listaComuni(regione.getNomeRegione(),idMap));
 //		AGGIUNGO VERTICI
 //		Con while evito che i duplicati vengano considerati come consegna
-		int i=0;
+		
 		ArrayList<Comuni> listaComuniNo=new ArrayList<Comuni>(listaComuni);
-		while(i<numeroConsegne ) 
+
+//		Aggiungo magazzino
+		grafo.addVertex(magazzino);
+		listaComuniNo.remove(magazzino);
+		
+		for(int i=0;i<numeroConsegne;i++)
 		{
 			int casuale=(int) (Math.random()*listaComuniNo.size());
 			Comuni vertice= listaComuniNo.get(casuale);
-//			Aggiungo magazzino
-			grafo.addVertex(magazzino);
+			listaComuniNo.remove(vertice);
+			grafo.addVertex(vertice);
 			
-			if(!grafo.containsVertex(vertice)) {
-				grafo.addVertex(vertice);
-				listaComuniNo.remove(vertice);
-			}
-			else {
-				listaComuniNo.get(casuale);
-			}
-			i++;
 		}
 			
 //		for(int i=0;i<numeroConsegne;i++) {
@@ -333,13 +333,13 @@ public class Model {
 			break;
 		}
 		
-		if(n>=4) {
+		if(n>3) {
 			throw new Exception("Troppi tentativi");
 		}
 		
 		int numArchi=(int) ( (numeroConsegne * (numeroConsegne+1) )/2);
 		if(grafo.edgeSet().size()!=numArchi) {
-			System.out.println("Riciclo per presenza isola/e");
+			System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
 			n++;
 			this.creaGrafo(regione, numeroConsegne, magazzino);
 		}
@@ -350,7 +350,7 @@ public class Model {
 }
 	
 	
-	
+//	m
 	
 //	Utile in strada 1.
 	private String nomeDBRegione(String regione) {
@@ -419,7 +419,7 @@ public class Model {
 	}
 	
 	public List<Veicolo> Simula(int numMezzi, int numConsMax) {
-		double tempoMassimo=800.0;
+		double tempoMassimo=480.0;
 		Simulator sim=new Simulator(this.grafo,this.magazzino,tempoMassimo);
 		sim.init(numMezzi, numConsMax);
 		sim.run();
