@@ -21,7 +21,7 @@
          <children>
             <VBox prefHeight="630.0" prefWidth="320.0" style="-fx-background-color: #4CAF50;">
                <children>
-                  <Label prefHeight="90.0" prefWidth="320.0" style="-fx-background-color: #388E3C;" text="Simulazione Trasporti" textFill="WHITE">
+                  <Label prefHeight="80.0" prefWidth="320.0" style="-fx-background-color: #388E3C;" text="Simulazione Trasporti" textFill="WHITE">
                      <padding>
                         <Insets left="20.0" />
                      </padding>
@@ -59,7 +59,7 @@
                   </Button>
                   <Line endX="150.0" startX="-100.0" stroke="#bdbdbd">
                      <VBox.margin>
-                        <Insets top="20.0" />
+                        <Insets top="10.0" />
                      </VBox.margin>
                   </Line>
                   <GridPane prefHeight="117.0" prefWidth="299.0">
@@ -99,7 +99,7 @@
                   </Button>
                   <Line endX="150.0" startX="-100.0" stroke="#bdbdbd">
                      <VBox.margin>
-                        <Insets top="20.0" />
+                        <Insets top="10.0" />
                      </VBox.margin>
                   </Line>
                   <Label text="Descrizione Programma" textFill="SNOW">
@@ -110,9 +110,9 @@
                         <Font name="Calibri Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Per effettuare la simulazione o l'ottimizzazione in un primo&#10;momento si deve scegliere la regione nel quale si intende lavorare.&#10;Successivamente si inserisce un magazzino principale tra i comuni della regione indicata ed il numero di consegne che si vogliono effettuare.&#10;Poi si sceglie se lavorare con Simulazione o Ottimizzazione.&#10;Nel primo caso devono essere inseriti il numero di veicoli ed il numero massimo di consegna per veicolo.&#10;Nel secondo caso devono essere indicati il comune di destinazione nel quale si vuole consegnare l'ordine finale e il tempo massimo impiegabile." textFill="SNOW">
+                  <Label prefHeight="236.0" prefWidth="310.0" text="Per effettuare la simulazione o l'ottimizzazione scegliere la &#10;regione con cui lavorare.&#10;Successivamente inserire un magazzino principale tra i comuni&#10;della regione indicata ed il numero di consegne che si vogliono&#10;effettuare.&#10;Per la simulazione devono essere inseriti il numero di veicoli,&#10;il numero massimo di consegna per veicolo e i minuti della&#10;giornata lavorativa considerata (8 h = 480 min).&#10;Per l'ottimizzazione devono essere indicati il comune di&#10;destinazione nel quale si vuole consegnare l'ordine finale e il &#10;tempo massimo impiegabile.&#10;La velocità della ricerca dipende dalla regione e dal valore dei&#10;parametri perciò è consigliato utilizzare valori contenuti." textFill="SNOW">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
                      </VBox.margin>
                      <font>
                         <Font name="Calibri Light" size="12.0" />
@@ -120,15 +120,15 @@
                   </Label>
                   <Line endX="150.0" startX="-100.0" stroke="#bdbdbd">
                      <VBox.margin>
-                        <Insets bottom="10.0" top="5.0" />
+                        <Insets />
                      </VBox.margin>
                   </Line>
-                  <Button fx:id="btnClear" maxWidth="260.0" mnemonicParsing="false" onAction="#doClear" prefHeight="100.0" text="Ricomincia">
+                  <Button fx:id="btnClear" maxWidth="260.0" mnemonicParsing="false" onAction="#doClear" text="Restart">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="30.0" right="30.0" top="5.0" />
+                        <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
                      </VBox.margin>
                      <font>
-                        <Font name="Ebrima" size="24.0" />
+                        <Font name="Ebrima" size="14.0" />
                      </font>
                   </Button>
                </children>
@@ -186,6 +186,32 @@
                         </TextField>
                      </children>
                      <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Line endY="25.0" stroke="#388e3c">
+                           <HBox.margin>
+                              <Insets left="120.0" />
+                           </HBox.margin>
+                        </Line>
+                        <Label text="Minuti giornata lavorativa">
+                           <HBox.margin>
+                              <Insets left="30.0" right="10.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Calibri Light" size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txtGiornata" />
+                        <Line endY="25.0" stroke="#388e3c">
+                           <HBox.margin>
+                              <Insets left="30.0" />
+                           </HBox.margin>
+                        </Line>
+                     </children>
+                     <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </HBox>
@@ -208,11 +234,23 @@
                               <Insets right="5.0" />
                            </HBox.margin>
                         </TextArea>
-                        <TextArea fx:id="txtComuni" editable="false" prefHeight="200.0" prefWidth="200.0">
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Lista Comuni">
+                                 <font>
+                                    <Font name="Calibri" size="16.0" />
+                                 </font>
+                              </Label>
+                              <TextArea fx:id="txtComuni" editable="false" prefHeight="200.0" prefWidth="200.0">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </TextArea>
+                           </children>
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
-                        </TextArea>
+                        </VBox>
                      </children>
                   </HBox>
                   <Line endX="480.0" startX="-100.0" stroke="#212121" />

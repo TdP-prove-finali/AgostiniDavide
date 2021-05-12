@@ -21,22 +21,19 @@ public class Simulator {
 	private double tempoMaxMin;
 	private int numeroCons;
 	
-	public Simulator(Graph<Comuni, DefaultWeightedEdge> grafo, Comuni magazzino,double tempoMaxMin) {
+	public Simulator(Graph<Comuni, DefaultWeightedEdge> grafo, Comuni magazzino) {
 		this.grafo = grafo;
 		this.magazzino = magazzino;
-		this.tempoMaxMin=tempoMaxMin;
 	}
-
-
-	// Magazzino, n mezzi, numero massimo consegne per mezzo
-	public void init(int numMezzi, int numConsMax ) {
+	
+	public void init(int numMezzi, int numConsMax, double tempoMaxMin) {
 		this.numeroCons=numConsMax;
+		this.tempoMaxMin=tempoMaxMin;
 		
 		this.veicoli=new ArrayList<>();
 		for(int i=0;i<numMezzi;i++) {
 //			Inizializzo i veicoli
 			List<Consegna> listaConsegne=new ArrayList<Consegna>();
-//			Map<Double,Comuni> mappaConsegne=new HashMap<Double,Comuni>();
 			this.veicoli.add(new Veicolo(i, listaConsegne ) );
 		}
 		listaConsegnati=new ArrayList<Comuni>();
@@ -48,14 +45,15 @@ public class Simulator {
 		for(int i=0;i<numMezzi;i++) {
 			if(i<listaVicini.size()) {
 //				Imposto destinazione iniziale a veicolo
-//				this.veicoli.get(i).setLibero(false);
 				ComuneDistanza prossimo=listaVicini.get(i);
-//				this.veicoli.get(i).getMappaConsegne().put(prossimo.getMinuti(), prossimo.getComune());
 				double tempoMagazzino= prossimo.getMinuti();
-				if(tempoMagazzino<= tempoMaxMin) {
+				if(tempoMagazzino+prossimo.getMinuti() < tempoMaxMin) {
 					listaConsegnati.add(prossimo.getComune());
 					Event e=new Event( prossimo.getMinuti(), EventType.CONSEGNA_EFFETTUATA, this.veicoli.get(i), prossimo.getComune() );
 					queue.add(e);
+				}
+				else {
+					
 				}
 			}
 		}
@@ -77,30 +75,30 @@ public class Simulator {
 			for(ComuneDistanza c:listaVicini) {
 				if( !listaConsegnati.contains(c.getComune()) ) {
 					prossimo=c;
-//					flag=1;
 					break;
 				}
 			}
 			if(prossimo!=null) {
-//				e.getVeicolo().setLibero(false);
 				double tempo=e.getTime()+prossimo.getMinuti();
-				listaConsegnati.add(prossimo.getComune());
-//				listaOrdini.remove(prossimo.getComune());
-				this.queue.add(new Event(tempo, EventType.CONSEGNA_EFFETTUATA, e.getVeicolo(), prossimo.getComune()) );
+				double tempoMagazzinoFuturo= this.grafo.getEdgeWeight( this.grafo.getEdge(prossimo.getComune(), magazzino) ) ;
+				if (tempo+tempoMagazzinoFuturo>=tempoMaxMin) {
+					double tempoMagazzinoPresente= this.grafo.getEdgeWeight( this.grafo.getEdge(e.getComune(), magazzino) );
+					e.getVeicolo().getListaConsegna().add(new Consegna( magazzino, tempoMagazzinoPresente+e.getTime() ));
+				} else {
+					listaConsegnati.add(prossimo.getComune());
+					this.queue.add(new Event(tempo, EventType.CONSEGNA_EFFETTUATA, e.getVeicolo(), prossimo.getComune()) );
+				}
+			} else {
+				double tempoMagazzino= this.grafo.getEdgeWeight( this.grafo.getEdge(e.getComune(), magazzino) ) ;
+				e.getVeicolo().getListaConsegna().add(new Consegna( magazzino, tempoMagazzino+e.getTime() ));
 			}
+				
 			break;
 		case CONSEGNA_EFFETTUATA:
-//			NON LO TOGLIE DA LISTAORDINI PERCHE'?
-//			IDEA PARALLELA:inserire un boolean in Comuni con su scritto consegna effettuata.
-//			e.getVeicolo().setLibero(true);
-			double tempoConsegna=e.getTime()+15.0;
-//			Non funziona
-			double tempoMagazzino= this.grafo.getEdgeWeight( this.grafo.getEdge(e.getComune(), magazzino) ) ;
-			if(tempoMagazzino+e.getTime()<= tempoMaxMin)
-				if(e.getVeicolo().getListaConsegna().size() < numeroCons) {
-					e.getVeicolo().getListaConsegna().add(new Consegna( e.getComune(), tempoConsegna ));
-					this.queue.add(new Event(tempoConsegna, EventType.CONSEGNA_IN_CORSO, e.getVeicolo(), e.getComune()) );
-				}
+			if(e.getVeicolo().getListaConsegna().size() < numeroCons) {
+				e.getVeicolo().getListaConsegna().add(new Consegna( e.getComune(), e.getTime() ));
+				this.queue.add(new Event(e.getTime(), EventType.CONSEGNA_IN_CORSO, e.getVeicolo(), e.getComune()) );
+			}
 			break;
 
 		}

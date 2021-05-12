@@ -418,10 +418,9 @@ public class Model {
 		return result;
 	}
 	
-	public List<Veicolo> Simula(int numMezzi, int numConsMax) {
-		double tempoMassimo=480.0;
-		Simulator sim=new Simulator(this.grafo,this.magazzino,tempoMassimo);
-		sim.init(numMezzi, numConsMax);
+	public List<Veicolo> Simula(int numMezzi, int numConsMax, double tempoMassimo) {
+		Simulator sim=new Simulator(this.grafo,this.magazzino);
+		sim.init(numMezzi, numConsMax,tempoMassimo);
 		sim.run();
 		return sim.getVeicoli();
 	}
@@ -441,8 +440,14 @@ public class Model {
 		}
 //		CASO TERMINALE
 		if(parziale.get(parziale.size()-1).getComune().equals(destinazione)) {
-			if(parziale.size()>this.best.size()) {
-				this.best=new ArrayList<Consegna>(parziale);
+			if(parziale.size()>=this.best.size()) {
+				if(parziale.size()==this.best.size() && this.best.size()>0) {
+					if(parziale.get(parziale.size()-1).getTime()<=this.best.get(best.size()-1).getTime() ) {
+						this.best=new ArrayList<Consegna>(parziale);
+					}
+				} else {
+					this.best=new ArrayList<Consegna>(parziale);
+				}
 			}
 			return;
 		}
@@ -451,12 +456,12 @@ public class Model {
 			if(!parziale.contains(new Consegna(vicino,0.0))) {
 				DefaultWeightedEdge e=this.grafo.getEdge(parziale.get(parziale.size()-1).getComune(), vicino);
 //				Provo ad aggiungere
-				time+= (this.grafo.getEdgeWeight(e)+15.0);
+				time+= this.grafo.getEdgeWeight(e);
 				parziale.add(new Consegna(vicino,time));
 //				Continuo ricorsione
 				this.trovaRicorsivo(destinazione, parziale,tempoMax, time);
 				
-				time-= (this.grafo.getEdgeWeight(e)+15);
+				time-= this.grafo.getEdgeWeight(e);
 				parziale.remove(parziale.size()-1);
 			}
 		}
