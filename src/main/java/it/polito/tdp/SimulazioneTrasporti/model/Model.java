@@ -44,11 +44,9 @@ public class Model {
 	
 	public Graph<Comuni,DefaultWeightedEdge> creaGrafo(Regione regione,int numeroConsegne,Comuni magazzino ) throws Exception {
 		this.magazzino=magazzino;
-//		idMap=new HashMap<Integer,Comuni>();
 		grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);
-//		listaComuni=new ArrayList<Comuni>(dao.listaComuni(regione.getNomeRegione(),idMap));
+		
 //		AGGIUNGO VERTICI
-//		Con while evito che i duplicati vengano considerati come consegna
 		
 		ArrayList<Comuni> listaComuniNo=new ArrayList<Comuni>(listaComuni);
 
@@ -64,277 +62,351 @@ public class Model {
 			grafo.addVertex(vertice);
 			
 		}
-			
-//		for(int i=0;i<numeroConsegne;i++) {
-//			int casuale=(int) (Math.random()*idMap.size());
-//			Comuni vertice= idMap.get(casuale);
-//			if(!grafo.containsVertex(vertice)) 
-//				grafo.addVertex(vertice);
-//			else {
-//		}
 		
-		
-
-		
-//		AGGIUNGO ARCHI
-		
-//		Strada 1
-//		for(Comuni c:grafo.vertexSet()) {
-//			Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamenti(Integer.toString(c.getCodiceInteroComune()), this.nomeDBRegione(nomeRegione)));
-//			for(Comuni dest:grafo.vertexSet()) {
-//				if(!c.equals(dest)) {
-//					String var=Integer.toString(dest.getCodiceInteroComune());
-//					if(mappaColl.containsKey(var))
-//						Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-//				}
-//			}
-//		}
-//		
-//		Strada 2
+		if(n>7) {
+			throw new Exception("Troppi tentativi");
+		}
 		
 		switch(regione.getNomeRegione()) {
 		case "Liguria":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiLiguria(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiLiguria(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Abruzzo":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiAbruzzo(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiAbruzzo(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Basilicata":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiBasilicata(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiBasilicata(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+							System.out.println("Miao");
+						}
 					}
 				}
 			};
 			break;
 		case "Calabria":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiCalabria(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiCalabria(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Campania":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiCampania(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiCampania(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Lazio":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiLazio(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiLazio(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Marche":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiMarche(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiMarche(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Molise":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiMolise(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiMolise(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();		
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Puglia":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiPuglia(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiPuglia(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Sardegna":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiSardegna(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiSardegna(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Sicilia":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiSicilia(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiSicilia(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Toscana":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiToscana(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiToscana(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Umbria":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiUmbria(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiUmbria(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Veneto":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiVeneto(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiVeneto(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
-		case "Valle d'Aosta/Vallée d'Aoste":
+		case "Valle d'Aosta/VallÃ©e d'Aoste":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiValle(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiValle(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
-		case "Trentino-Alto Adige/Südtirol":
+		case "Trentino-Alto Adige/SÃ¼dtirol":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiTrentino(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiTrentino(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Emilia-Romagna":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiEmiliaRomagna(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiEmiliaRomagna(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
 		case "Friuli-Venezia Giulia":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiFriuli(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiFriuli(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 		case "Piemonte":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiPiemonte(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiPiemonte(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 		case "Lombardia":
 			for(Comuni c:grafo.vertexSet()) {
-				Map<String,Collegamento> mappaColl=new HashMap<String,Collegamento>(dao.mappaCollegamentiLombardia(Integer.toString(c.getCodiceInteroComune())));
+				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiLombardia(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
-					if(!c.equals(dest)) {
-						String var=Integer.toString(dest.getCodiceInteroComune());
-						if(mappaColl.containsKey(var))
+					if(!c.equals(dest) && !grafo.containsEdge(c, dest)) {
+						int var=dest.getCodiceInteroComune();
+						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
+						} else {
+							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
+							n++;
+							this.creaGrafo(regione, numeroConsegne, magazzino);
+						}
 					}
 				}
 			};
 			break;
-		}
-		
-		if(n>3) {
-			throw new Exception("Troppi tentativi");
 		}
 		
 		int numArchi=(int) ( (numeroConsegne * (numeroConsegne+1) )/2);
@@ -348,75 +420,6 @@ public class Model {
 			
 		
 }
-	
-	
-//	m
-	
-//	Utile in strada 1.
-	private String nomeDBRegione(String regione) {
-		String result="";
-		
-		switch(regione) {
-		case "Liguria":
-			result="liguria";
-			break;
-		case "Abruzzo":
-			result="abruzzo";
-			break;
-		case "Basilicata":
-			result="basilicata";
-			break;
-		case "Calabria":
-			result="calabria";
-			break;
-		case "Campania":
-			result="campania";
-			break;
-		case "Lazio":
-			result="lazio";
-			break;
-		case "Marche":
-			result="marche";
-			break;
-		case "Molise":
-			result="Molise";
-			break;
-		case "Puglia":
-			result="puglia";
-			break;
-		case "Sardegna":
-			result="sardegna";
-			break;
-		case "Sicilia":
-			result="sicilia";
-			break;
-		case "Toscana":
-			result="toscana";
-			break;
-		case "Umbria":
-			result="umbria";
-			break;
-		case "Veneto":
-			result="veneto";
-			break;
-		case "Valle d'Aosta/Vallée d'Aoste":
-			result="valle_d_aosta";
-			break;
-		case "Trentino-Alto Adige/Südtirol":
-			result="trentino_alto_adige";
-			break;
-		case "Emilia-Romagna":
-			result="emilia_romagna";
-			break;
-		case "Friuli-Venezia Giulia":
-			result="friuli_venezia_giulia";
-			break;
-			
-//			MANCANTI PIEMONTE E LOMBARDIA
-			
-		}
-		return result;
-	}
 	
 	public List<Veicolo> Simula(int numMezzi, int numConsMax, double tempoMassimo) {
 		Simulator sim=new Simulator(this.grafo,this.magazzino);

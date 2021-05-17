@@ -1,7 +1,6 @@
 package it.polito.tdp.SimulazioneTrasporti.model;
 
 import java.util.List;
-import java.util.Map;
 
 public class Veicolo {
 

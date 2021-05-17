@@ -66,59 +66,23 @@ public class TrasportiDao {
 		}
 	}
 	
-//	STRADA 1: Regione non nota, vado a ragionare sul db e inserisco `` per fare in modo che venga considerato il data-set giusto
-//	Problema: nel momento in cui viene inserito st.setString() viene aggiunto alla stringa iniziale '' e ciò fa in modo che non venga considerato la tabella adeguata
-//	Per risolvere il problema utilizzo uno "stratagemma": cambiando il nome delle regioni nel data-set il programma funziona normalmente
-//	Esempio campania diventa 'campania'.
-//	Con questo stratagemma invio da eclipse al db `'campania'` e il db utilizza `` per considerare quella stringa come una tabella e quindi cercherà 'campania'.
-//	Ciò mi permette un adeguato funzionamento, ma potrà causare problemi nel caso di implementazioni successive a quella studiata.
-	
-	public Map<String,Collegamento> mappaCollegamenti(String codice1, String regione) {
-		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
-				"FROM `?` " + 
-				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
-		Connection conn = DBConnect.getConnection();
 
-		try {
-			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, regione);
-			st.setString(2, codice1);
-			ResultSet res = st.executeQuery();
-
-			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
-			}
-			conn.close();
-			return result;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 	
-	
-	
-//	CONTROLLARE BENE
-//	Strada 2: Considero regione per regione una funzione che mi considera la regione designata.
-//	Necessito di uno switch nel model.
-//	Strada molto più lunga, ma più semplice.
-//	Non sono presenti stratagemmi se non in Lombardia e Piemonte.
-	
-	public Map<String,Collegamento> mappaCollegamentiAbruzzo(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiAbruzzo(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM abruzzo " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, codice);
+			
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -128,21 +92,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiBasilicata(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiBasilicata(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM basilicata " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -152,21 +116,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiCalabria(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiCalabria(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM calabria " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -177,21 +141,21 @@ public class TrasportiDao {
 	}
 	
 	
-	public Map<String,Collegamento> mappaCollegamentiCampania(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiCampania(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM campania " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -201,21 +165,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiEmiliaRomagna(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiEmiliaRomagna(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM emilia_romagna " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -225,21 +189,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiFriuli(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiFriuli(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM friuli_venezia_giulia " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -249,21 +213,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiLazio(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiLazio(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM lazio " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -273,21 +237,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiLiguria(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiLiguria(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM liguria " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -297,21 +261,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiMarche(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiMarche(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM marche " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -321,21 +285,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiMolise(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiMolise(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM molise " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -346,21 +310,21 @@ public class TrasportiDao {
 	}
 	
 	
-	public Map<String,Collegamento> mappaCollegamentiPuglia(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiPuglia(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM puglia " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -370,21 +334,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiSardegna(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiSardegna(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM sardegna " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -395,21 +359,21 @@ public class TrasportiDao {
 	}
 	
 	
-	public Map<String,Collegamento> mappaCollegamentiSicilia(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiSicilia(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM sicilia " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -420,21 +384,21 @@ public class TrasportiDao {
 	}
 	
 	
-	public Map<String,Collegamento> mappaCollegamentiToscana(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiToscana(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM toscana " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -445,21 +409,21 @@ public class TrasportiDao {
 	}
 	
 	
-	public Map<String,Collegamento> mappaCollegamentiTrentino(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiTrentino(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM trentino_alto_adige " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -469,21 +433,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiUmbria(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiUmbria(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM umbria " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -493,21 +457,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiValle(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiValle(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM valle_d_aosta " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -517,21 +481,21 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiVeneto(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiVeneto(int codice) {
 		String sql="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM veneto " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			
-			st.setString(1, codice);
+			st.setInt(1, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -541,7 +505,7 @@ public class TrasportiDao {
 		}
 	}
 	
-	public Map<String,Collegamento> mappaCollegamentiPiemonte(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiPiemonte(int codice) {
 		String sql1="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM piemonte2 " + 
 				"WHERE comune_partenza= ? " + 
@@ -549,18 +513,18 @@ public class TrasportiDao {
 				"SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM piemonte1 " + 
 				"WHERE comune_partenza= ?";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql1);
 		
-			st.setString(1, codice);
-			st.setString(2, codice);
+			st.setInt(1, codice);
+			st.setInt(2, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;
@@ -571,7 +535,7 @@ public class TrasportiDao {
 	}
 //	m
 	
-	public Map<String,Collegamento> mappaCollegamentiLombardia(String codice) {
+	public Map<Integer,Collegamento> mappaCollegamentiLombardia(int codice) {
 		String sql1="SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM lombardia1 " + 
 				"WHERE comune_partenza= ? " + 
@@ -587,20 +551,20 @@ public class TrasportiDao {
 				"SELECT comune_partenza, comune_arrivo, minuti_impiegati " + 
 				"FROM lombardia4 " + 
 				"WHERE comune_partenza= ? ";
-		Map<String,Collegamento> result=new HashMap<>();
+		Map<Integer,Collegamento> result=new HashMap<>();
 		Connection conn = DBConnect.getConnection();
 		try {
 			
 			PreparedStatement st = conn.prepareStatement(sql1);
 			
-			st.setString(1, codice);
-			st.setString(2, codice);
-			st.setString(3, codice);
-			st.setString(4, codice);
+			st.setInt(1, codice);
+			st.setInt(2, codice);
+			st.setInt(3, codice);
+			st.setInt(4, codice);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
-				result.put(res.getString("comune_arrivo") ,new Collegamento( res.getString("comune_partenza"),res.getString("comune_arrivo"),res.getDouble("minuti_impiegati") ));
+				result.put(res.getInt("comune_arrivo") ,new Collegamento( res.getInt("comune_partenza"),res.getInt("comune_arrivo"),res.getDouble("minuti_impiegati") ));
 			}
 			conn.close();
 			return result;

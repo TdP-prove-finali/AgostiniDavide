@@ -2,30 +2,25 @@ package it.polito.tdp.SimulazioneTrasporti.model;
 
 public class Collegamento {
 	
-	private String origine;
-	private String destinazione;
+	private int origine;
+	private int destinazione;
 	private double peso;
-	/**
-	 * @param origine
-	 * @param destinazione
-	 * @param peso
-	 */
-	public Collegamento(String origine, String destinazione, double peso) {
+	
+	public Collegamento(int origine, int destinazione, double peso) {
 		this.origine = origine;
 		this.destinazione = destinazione;
 		this.peso = peso;
 	}
-	
-	public String getOrigine() {
+	public int getOrigine() {
 		return origine;
 	}
-	public void setOrigine(String origine) {
+	public void setOrigine(int origine) {
 		this.origine = origine;
 	}
-	public String getDestinazione() {
+	public int getDestinazione() {
 		return destinazione;
 	}
-	public void setDestinazione(String destinazione) {
+	public void setDestinazione(int destinazione) {
 		this.destinazione = destinazione;
 	}
 	public double getPeso() {
@@ -34,6 +29,8 @@ public class Collegamento {
 	public void setPeso(double peso) {
 		this.peso = peso;
 	}
+
+	
 	
 	
 

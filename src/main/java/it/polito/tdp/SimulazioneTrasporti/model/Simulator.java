@@ -48,7 +48,6 @@ public class Simulator {
 				ComuneDistanza prossimo=listaVicini.get(i);
 				double tempoMagazzino= prossimo.getMinuti();
 				if(tempoMagazzino+prossimo.getMinuti() < tempoMaxMin) {
-					listaConsegnati.add(prossimo.getComune());
 					Event e=new Event( prossimo.getMinuti(), EventType.CONSEGNA_EFFETTUATA, this.veicoli.get(i), prossimo.getComune() );
 					queue.add(e);
 				}
@@ -81,24 +80,28 @@ public class Simulator {
 			if(prossimo!=null) {
 				double tempo=e.getTime()+prossimo.getMinuti();
 				double tempoMagazzinoFuturo= this.grafo.getEdgeWeight( this.grafo.getEdge(prossimo.getComune(), magazzino) ) ;
-				if (tempo+tempoMagazzinoFuturo>=tempoMaxMin) {
-					double tempoMagazzinoPresente= this.grafo.getEdgeWeight( this.grafo.getEdge(e.getComune(), magazzino) );
-					e.getVeicolo().getListaConsegna().add(new Consegna( magazzino, tempoMagazzinoPresente+e.getTime() ));
+				if ( (tempo+tempoMagazzinoFuturo) >=tempoMaxMin) {
+					this.queue.add(new Event(e.getTime(),EventType.RITORNO_MAGAZZINO,e.getVeicolo(),e.getComune()));
 				} else {
-					listaConsegnati.add(prossimo.getComune());
 					this.queue.add(new Event(tempo, EventType.CONSEGNA_EFFETTUATA, e.getVeicolo(), prossimo.getComune()) );
 				}
 			} else {
-				double tempoMagazzino= this.grafo.getEdgeWeight( this.grafo.getEdge(e.getComune(), magazzino) ) ;
-				e.getVeicolo().getListaConsegna().add(new Consegna( magazzino, tempoMagazzino+e.getTime() ));
+				this.queue.add(new Event(e.getTime(),EventType.RITORNO_MAGAZZINO,e.getVeicolo(),e.getComune()));
 			}
 				
 			break;
 		case CONSEGNA_EFFETTUATA:
-			if(e.getVeicolo().getListaConsegna().size() < numeroCons) {
+			if( (e.getVeicolo().getListaConsegna().size()) < numeroCons) {
+				listaConsegnati.add(e.getComune());
 				e.getVeicolo().getListaConsegna().add(new Consegna( e.getComune(), e.getTime() ));
 				this.queue.add(new Event(e.getTime(), EventType.CONSEGNA_IN_CORSO, e.getVeicolo(), e.getComune()) );
+			} else {
+				this.queue.add(new Event(e.getTime(),EventType.RITORNO_MAGAZZINO,e.getVeicolo(),e.getComune()));
 			}
+			break;
+		case RITORNO_MAGAZZINO:
+			double tempoMagazzino= this.grafo.getEdgeWeight( this.grafo.getEdge(e.getComune(), magazzino) ) ;
+			e.getVeicolo().getListaConsegna().add(new Consegna( magazzino, tempoMagazzino+e.getTime() ));
 			break;
 
 		}

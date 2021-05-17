@@ -1,4 +1,5 @@
 /**
+ /**
  * Sample Skeleton for 'Scene.fxml' Controller Class
  */
 
@@ -6,6 +7,7 @@ package it.polito.tdp.SimulazioneTrasporti;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -31,6 +33,7 @@ public class FXMLController {
 	private Regione regione;
 	Graph<Comuni,DefaultWeightedEdge> grafo;
 	private Comuni magazzino;
+	private int tentativi;
 	
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -139,10 +142,14 @@ public class FXMLController {
 				txtResultSimula.appendText("Ordini effettuati!\nGrafo caricato con "+grafo.vertexSet().size()+" vertici e con "+grafo.edgeSet().size()+" archi (compreso magazzino)");
 				txtResultOttimizza.appendText("Ordini effettuati!\nGrafo caricato con "+grafo.vertexSet().size()+" vertici e con "+grafo.edgeSet().size()+" archi (compreso magazzino)");
 		    	this.txtComuni.clear();
-				for(Comuni d:grafo.vertexSet()) {
+		    	
+		    	List<Comuni> lista=new ArrayList<Comuni>();
+		    	lista.addAll(grafo.vertexSet());
+		    	Collections.sort(lista);
+		    	this.boxDestinazione.getItems().addAll(lista);
+				for(Comuni d:lista) {
 					if(!d.equals(magazzino)) {
 						this.txtComuni.appendText(d.getNomeComune()+"\n");
-						this.boxDestinazione.getItems().add(d);
 					}
 				}
 				this.btnOttimizza.setDisable(false);
@@ -152,15 +159,14 @@ public class FXMLController {
 				txtResultSimula.appendText("Ordini non effettuati, assicurati di aver inserito un valore almeno >0\n");
 				txtResultOttimizza.appendText("Ordini non effettuati, assicurati di aver inserito un valore almeno >0\n");
 			}
-//			System.out.format("Grafo caricato con %d vertici %d archi \n", grafo.vertexSet().size(), grafo.edgeSet().size());
-			
 		} catch (NumberFormatException ex) {
 			txtResultSimula.appendText("ERRORE: Devi inserire un numero\n");
 			txtResultOttimizza.appendText("ERRORE: Devi inserire un numero\n");
 			return;
 		} catch (Exception e) {
-			txtResultSimula.appendText("Troppi tentativi di creazione grafo effettuati\nAssicurati di aver scelto un comune non presente su un isola e con collegamento via terra al resto della regione, se il problema persiste diminuisci il numero di ordini effettati");
-			txtResultOttimizza.appendText("Troppi tentativi di creazione grafo effettuati\nAssicurati di aver scelto un comune non presente su un isola e con collegamento via terra al resto della regione, se il problema persiste diminuisci il numero di ordini effettati");
+			this.tentativi++;
+			txtResultSimula.appendText("Troppi tentativi di creazione grafo effettuati\nAssicurati di aver scelto un comune non presente su un isola e con collegamento via terra al resto della regione\nSe il problema persiste diminuisci il numero di ordini effettati\nNumero tentativi effettuati da utente: "+this.tentativi);
+			txtResultOttimizza.appendText("Troppi tentativi di creazione grafo effettuati\nAssicurati di aver scelto un comune non presente su un isola e con collegamento via terra al resto della regione\nSe il problema persiste diminuisci il numero di ordini effettati\nNumero tentativi effettuati da utente: "+this.tentativi);
 		}
     	
 
@@ -246,6 +252,7 @@ public class FXMLController {
 		this.btnOttimizza.setDisable(true);
 		this.btnRegione.setDisable(false);
 		this.btnSimula.setDisable(true);
+		this.tentativi=0;
 
     }
 
@@ -272,6 +279,7 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model=model;
+		this.tentativi=0;
 		boxRegione.getItems().addAll(model.regioni());
 		this.btnOrdini.setDisable(true);
 		this.btnOttimizza.setDisable(true);
@@ -279,4 +287,3 @@ public class FXMLController {
 		this.btnSimula.setDisable(true);
 	}
 }
-

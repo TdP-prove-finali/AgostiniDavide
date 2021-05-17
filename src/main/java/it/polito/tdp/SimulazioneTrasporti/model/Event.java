@@ -5,6 +5,7 @@ public class Event implements Comparable<Event>{
 	public enum EventType {
 		CONSEGNA_IN_CORSO,
 		CONSEGNA_EFFETTUATA,
+		RITORNO_MAGAZZINO
 	}
 	
 	private Double time ;
