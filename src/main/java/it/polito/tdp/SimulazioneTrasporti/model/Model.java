@@ -43,30 +43,24 @@ public class Model {
 	
 	
 	public Graph<Comuni,DefaultWeightedEdge> creaGrafo(Regione regione,int numeroConsegne,Comuni magazzino ) throws Exception {
+		if(n>5) {
+			throw new Exception("Troppi tentativi");
+		}
 		this.magazzino=magazzino;
-		grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);
-		
-//		AGGIUNGO VERTICI
-		
+		grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);	
 		ArrayList<Comuni> listaComuniNo=new ArrayList<Comuni>(listaComuni);
-
-//		Aggiungo magazzino
+		
+//		Aggiungo vertici
 		grafo.addVertex(magazzino);
 		listaComuniNo.remove(magazzino);
-		
-		for(int i=0;i<numeroConsegne;i++)
-		{
+		for(int i=0;i<numeroConsegne;i++) {
 			int casuale=(int) (Math.random()*listaComuniNo.size());
 			Comuni vertice= listaComuniNo.get(casuale);
 			listaComuniNo.remove(vertice);
 			grafo.addVertex(vertice);
-			
 		}
 		
-		if(n>7) {
-			throw new Exception("Troppi tentativi");
-		}
-		
+//		Aggiungo archi
 		switch(regione.getNomeRegione()) {
 		case "Liguria":
 			for(Comuni c:grafo.vertexSet()) {
@@ -76,11 +70,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -93,10 +83,6 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
 						}
 					}
 				}
@@ -110,12 +96,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-							System.out.println("Miao");
-						}
+						} 
 					}
 				}
 			};
@@ -128,11 +109,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -145,11 +122,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -162,11 +135,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -179,11 +148,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -196,11 +161,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();		
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -213,11 +174,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -230,10 +187,6 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
 						}
 					}
 				}
@@ -247,11 +200,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -264,11 +213,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -281,11 +226,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -298,11 +239,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -315,11 +252,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -332,11 +265,7 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
-						}
+						} 
 					}
 				}
 			};
@@ -349,10 +278,6 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
 						}
 					}
 				}
@@ -366,10 +291,6 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
 						}
 					}
 				}
@@ -382,10 +303,6 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
 						}
 					}
 				}
@@ -398,20 +315,16 @@ public class Model {
 						int var=dest.getCodiceInteroComune();
 						if(mappaColl.containsKey(var)) {
 							Graphs.addEdge(grafo, c, dest, mappaColl.get(var).getPeso());
-						} else {
-							System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
-							n++;
-							this.creaGrafo(regione, numeroConsegne, magazzino);
 						}
 					}
 				}
 			};
 			break;
 		}
+	
 		
 		int numArchi=(int) ( (numeroConsegne * (numeroConsegne+1) )/2);
 		if(grafo.edgeSet().size()!=numArchi) {
-			System.out.println("Riciclo per presenza isola/e o comune/i non raggiungibili");
 			n++;
 			this.creaGrafo(regione, numeroConsegne, magazzino);
 		}
@@ -473,7 +386,79 @@ public class Model {
 	public void setN(int n) {
 		this.n = n;
 	}
+	
+	
+	
+	
+	
+	public List<Veicolo> secondoAlgoritmo(int numMezzi, int numConsMax, double tempo) {
+		List<Veicolo> veicoli=new ArrayList<>();
+		double tempoMassimo=tempo;
+		List<Comuni> disponibili=new ArrayList<>(grafo.vertexSet());
+		disponibili.remove(magazzino);
+		
+		for(int i=0;i<numMezzi;i++) {
+			List<Consegna> listaConsegne=new ArrayList<Consegna>();
+			veicoli.add(new Veicolo( i, listaConsegne ) );
+		}
+		
+		for(Veicolo v: veicoli) {
+			List<Consegna> parziale=new ArrayList<>();
+			Consegna c=new Consegna(this.magazzino, 0.0);
+			parziale.add(c);
+			this.best=new ArrayList<>();
+			percorsoRicorsione(parziale, numConsMax, tempoMassimo, disponibili, 0.0);
+			best.remove(c);
+			
+			if(best.size()>0) {
+				double tempoMagazzino=this.grafo.getEdgeWeight( this.grafo.getEdge( best.get( best.size()-1 ).getComune(),this.magazzino)  );
+				this.best.add(new Consegna(magazzino,tempoMagazzino+this.best.get(best.size()-1).getTime()));
+			}
+			for(Consegna d:best) {
+				disponibili.remove(d.getComune());
+				v.getListaConsegna().add(d);
+			}
+			
+		}
+		
+		return veicoli;
+	}
 
+private void percorsoRicorsione(List<Consegna> parziale, int numConsMax, double tempoMassimo, List<Comuni> disponibili, double time) {
+//	CASO INTERMEDIO
+	if(parziale.size()>1) {
+		double tempoMagazzino=this.grafo.getEdgeWeight( this.grafo.getEdge( parziale.get( parziale.size()-1 ).getComune(),this.magazzino)  );
+		if((time+tempoMagazzino)>=tempoMassimo) {
+			return;
+		}
+	}
 	
+//	CASO TERMINALE 
+	if((parziale.size()>=this.best.size()) ) {
+		if(parziale.size()==this.best.size() && this.best.size()>0) {
+			if(parziale.get(parziale.size()-1).getTime()<=this.best.get(best.size()-1).getTime() ) {
+				this.best=new ArrayList<Consegna>(parziale);
+			}
+		} else {
+			this.best=new ArrayList<Consegna>(parziale);
+		}
+	if(parziale.size()==(numConsMax+1)) {
+		return;
+	}
+}
 	
+//	RICORSIONE
+	for(Comuni vicino:disponibili ){
+		if(!parziale.contains(new Consegna(vicino,0.0))) {
+			DefaultWeightedEdge e=this.grafo.getEdge(parziale.get(parziale.size()-1).getComune(), vicino);
+			time+= this.grafo.getEdgeWeight(e);
+			parziale.add(new Consegna(vicino,time));
+			this.percorsoRicorsione( parziale, numConsMax, tempoMassimo, disponibili, time);
+			
+			time-= this.grafo.getEdgeWeight(e);
+			parziale.remove(parziale.size()-1);
+		}
+	}
+
+}
 }

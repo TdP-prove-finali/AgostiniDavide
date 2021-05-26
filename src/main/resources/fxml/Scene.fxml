@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
@@ -110,7 +111,7 @@
                         <Font name="Calibri Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label prefHeight="236.0" prefWidth="310.0" text="Per effettuare la simulazione o l'ottimizzazione scegliere la &#10;regione con cui lavorare.&#10;Successivamente inserire un magazzino principale tra i comuni&#10;della regione indicata ed il numero di consegne che si vogliono&#10;effettuare.&#10;Per la simulazione devono essere inseriti il numero di veicoli,&#10;il numero massimo di consegna per veicolo e i minuti della&#10;giornata lavorativa considerata (8 h = 480 min).&#10;Per l'ottimizzazione devono essere indicati il comune di&#10;destinazione nel quale si vuole consegnare l'ordine finale e il &#10;tempo massimo impiegabile.&#10;La velocità della ricerca dipende dalla regione e dal valore dei&#10;parametri perciò è consigliato utilizzare valori contenuti." textFill="SNOW">
+                  <Label prefHeight="240.0" prefWidth="310.0" text="Per effettuare la simulazione o l'ottimizzazione scegliere la &#10;regione con cui lavorare.&#10;Successivamente inserire un magazzino principale tra i comuni&#10;della regione indicata ed il numero di consegne che si vogliono&#10;effettuare.&#10;Per la simulazione devono essere inseriti il numero di veicoli,&#10;il numero massimo di consegna per veicolo e i minuti della&#10;giornata lavorativa considerata (8 h = 480 min).&#10;Scegliere successivamente se utilizzare la simulazione con carico&#10;di lavoro bilanciato su tutti i veicoli o che si concentra &#10;sull'ottimizzare il singolo veicolo.&#10;Per l'ottimizzazione devono essere indicati il comune di&#10;destinazione nel quale si vuole consegnare l'ordine finale e il &#10;tempo massimo impiegabile." textFill="SNOW">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" />
                      </VBox.margin>
@@ -215,6 +216,23 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </HBox>
+                  <HBox>
+                     <children>
+                        <RadioButton fx:id="radioPrimo" mnemonicParsing="false" onAction="#handlePrimo" text="Bilanciata">
+                           <HBox.margin>
+                              <Insets left="170.0" right="40.0" />
+                           </HBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="radioSecondo" mnemonicParsing="false" onAction="#handleSecondo" text="Non bilanciata">
+                           <HBox.margin>
+                              <Insets left="30.0" />
+                           </HBox.margin>
+                        </RadioButton>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </HBox>
                   <Button fx:id="btnSimula" mnemonicParsing="false" onAction="#doSimulazione" prefWidth="200.0" text="Esegui simulazione">
                      <VBox.margin>
                         <Insets bottom="10.0" left="190.0" right="190.0" />
@@ -224,12 +242,12 @@
                      </font>
                   </Button>
                   <Line endX="400.0" startX="-100.0" stroke="#388e3c" />
-                  <HBox prefHeight="171.0" prefWidth="550.0">
+                  <HBox prefHeight="200.0" prefWidth="550.0">
                      <VBox.margin>
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                      </VBox.margin>
                      <children>
-                        <TextArea fx:id="txtResultSimula" editable="false" prefHeight="171.0" prefWidth="475.0">
+                        <TextArea fx:id="txtResultSimula" editable="false" prefHeight="180.0" prefWidth="475.0">
                            <HBox.margin>
                               <Insets right="5.0" />
                            </HBox.margin>

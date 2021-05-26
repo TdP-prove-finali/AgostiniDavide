@@ -29,39 +29,23 @@ public class Simulator {
 	public void init(int numMezzi, int numConsMax, double tempoMaxMin) {
 		this.numeroCons=numConsMax;
 		this.tempoMaxMin=tempoMaxMin;
-		
-		this.veicoli=new ArrayList<>();
-		for(int i=0;i<numMezzi;i++) {
-//			Inizializzo i veicoli
-			List<Consegna> listaConsegne=new ArrayList<Consegna>();
-			this.veicoli.add(new Veicolo(i, listaConsegne ) );
-		}
 		listaConsegnati=new ArrayList<Comuni>();
 		listaConsegnati.add(magazzino);
 		queue=new PriorityQueue<Event>();
-		
-		List<ComuneDistanza> listaVicini=new ArrayList<ComuneDistanza>(this.viciniMigliore(magazzino));
-		
+//		Inizializzo veicoli
+		this.veicoli=new ArrayList<>();
 		for(int i=0;i<numMezzi;i++) {
-			if(i<listaVicini.size()) {
-//				Imposto destinazione iniziale a veicolo
-				ComuneDistanza prossimo=listaVicini.get(i);
-				double tempoMagazzino= prossimo.getMinuti();
-				if(tempoMagazzino+prossimo.getMinuti() < tempoMaxMin) {
-					Event e=new Event( prossimo.getMinuti(), EventType.CONSEGNA_EFFETTUATA, this.veicoli.get(i), prossimo.getComune() );
-					queue.add(e);
-				}
-				else {
-					
-				}
-			}
+			List<Consegna> listaConsegne=new ArrayList<Consegna>();
+			this.veicoli.add(new Veicolo(i, listaConsegne ) );
+
+			this.queue.add(new Event(0.0, EventType.CONSEGNA_IN_CORSO, this.veicoli.get(i), magazzino) );
+			
 		}
 	}
 	
 	public void run() {
 		while(!queue.isEmpty()) {
 			Event e=queue.poll();
-//			System.out.println(e);
 			processEvent(e);
 		}
 	}
@@ -69,37 +53,39 @@ public class Simulator {
 	private void processEvent(Event e) {
 		switch(e.getType()) {
 		case CONSEGNA_IN_CORSO:
-			List<ComuneDistanza> listaVicini=new ArrayList<ComuneDistanza>(this.viciniMigliore(e.getComune()));
-			ComuneDistanza prossimo=null;
-			for(ComuneDistanza c:listaVicini) {
+			List<Consegna> listaVicini=new ArrayList<Consegna>(this.viciniMigliore(e.getComune()));
+			Consegna prossimo=null;
+			for(Consegna c:listaVicini) {
 				if( !listaConsegnati.contains(c.getComune()) ) {
 					prossimo=c;
 					break;
 				}
 			}
 			if(prossimo!=null) {
-				double tempo=e.getTime()+prossimo.getMinuti();
+				double tempo=e.getTime()+prossimo.getTime();
 				double tempoMagazzinoFuturo= this.grafo.getEdgeWeight( this.grafo.getEdge(prossimo.getComune(), magazzino) ) ;
 				if ( (tempo+tempoMagazzinoFuturo) >=tempoMaxMin) {
 					this.queue.add(new Event(e.getTime(),EventType.RITORNO_MAGAZZINO,e.getVeicolo(),e.getComune()));
 				} else {
-					this.queue.add(new Event(tempo, EventType.CONSEGNA_EFFETTUATA, e.getVeicolo(), prossimo.getComune()) );
+					if(e.getVeicolo().getListaConsegna().size()<numeroCons) {
+						listaConsegnati.add(prossimo.getComune());
+						this.queue.add(new Event(tempo, EventType.CONSEGNA_EFFETTUATA, e.getVeicolo(), prossimo.getComune()) );
+					} else {
+						this.queue.add(new Event(e.getTime(),EventType.RITORNO_MAGAZZINO,e.getVeicolo(),e.getComune()));
+					}
 				}
 			} else {
 				this.queue.add(new Event(e.getTime(),EventType.RITORNO_MAGAZZINO,e.getVeicolo(),e.getComune()));
 			}
-				
 			break;
 		case CONSEGNA_EFFETTUATA:
-			if( (e.getVeicolo().getListaConsegna().size()) < numeroCons) {
-				listaConsegnati.add(e.getComune());
-				e.getVeicolo().getListaConsegna().add(new Consegna( e.getComune(), e.getTime() ));
-				this.queue.add(new Event(e.getTime(), EventType.CONSEGNA_IN_CORSO, e.getVeicolo(), e.getComune()) );
-			} else {
-				this.queue.add(new Event(e.getTime(),EventType.RITORNO_MAGAZZINO,e.getVeicolo(),e.getComune()));
-			}
+			e.getVeicolo().getListaConsegna().add(new Consegna( e.getComune(), e.getTime() ));
+			this.queue.add(new Event(e.getTime(), EventType.CONSEGNA_IN_CORSO, e.getVeicolo(), e.getComune()) );
 			break;
 		case RITORNO_MAGAZZINO:
+			if(e.getComune().equals(this.magazzino)) {
+				break;
+			}
 			double tempoMagazzino= this.grafo.getEdgeWeight( this.grafo.getEdge(e.getComune(), magazzino) ) ;
 			e.getVeicolo().getListaConsegna().add(new Consegna( magazzino, tempoMagazzino+e.getTime() ));
 			break;
@@ -109,14 +95,14 @@ public class Simulator {
 	}
 
 	
-	private List<ComuneDistanza> viciniMigliore(Comuni c) {
+	private List<Consegna> viciniMigliore(Comuni c) {
 		
-		List<ComuneDistanza> result=new ArrayList<ComuneDistanza>();
+		List<Consegna> result=new ArrayList<Consegna>();
 		List<Comuni> vicini= Graphs.neighborListOf(this.grafo, c);
 		
 		for(Comuni comuni: vicini) {
 				double minimo= this.grafo.getEdgeWeight(this.grafo.getEdge(c, comuni));
-				result.add(new ComuneDistanza(comuni,minimo));
+				result.add(new Consegna(comuni,minimo));
 		}
 		Collections.sort(result);
 		return result;

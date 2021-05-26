@@ -1,16 +1,15 @@
 package it.polito.tdp.SimulazioneTrasporti.model;
 
-public class Consegna {
+public class Consegna implements Comparable<Consegna>{
 	
 
 	private Comuni comune;
-	private double time;
+	private Double time;
 	/**
 	 * @param comune
 	 * @param time
 	 */
-	public Consegna(Comuni comune, double time) {
-		super();
+	public Consegna(Comuni comune, Double time) {
 		this.comune = comune;
 		this.time = time;
 	}
@@ -20,7 +19,7 @@ public class Consegna {
 	public void setComune(Comuni comune) {
 		this.comune = comune;
 	}
-	public double getTime() {
+	public Double getTime() {
 		return time;
 	}
 	public void setTime(double time) {
@@ -49,6 +48,10 @@ public class Consegna {
 		} else if (!comune.equals(other.comune))
 			return false;
 		return true;
+	}
+	@Override
+	public int compareTo(Consegna o) {
+		return (this.time.compareTo(o.getTime()));
 	}
 	
 	

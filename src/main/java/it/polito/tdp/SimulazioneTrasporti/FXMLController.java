@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -89,6 +90,12 @@ public class FXMLController {
     
     @FXML // fx:id="txtComuni"
     private TextArea txtComuni; // Value injected by FXMLLoader
+
+    @FXML // fx:id="radioPrimo"
+    private RadioButton radioPrimo; // Value injected by FXMLLoader
+
+    @FXML // fx:id="radioSecondo"
+    private RadioButton radioSecondo; // Value injected by FXMLLoader
     
     @FXML
     void doRegione(ActionEvent event) {
@@ -100,17 +107,14 @@ public class FXMLController {
 		
 		this.regione=this.boxRegione.getValue();
 		if(regione==null) {
-    		txtResultSimula.appendText("Scegli una regione per continuare!\n");
-    		txtResultOttimizza.appendText("Scegli una regione per continuare!\n");
+    		txtResultSimula.appendText("ERRORE: Scegli una regione per continuare!\n");
+    		txtResultOttimizza.appendText("ERRORE: Scegli una regione per continuare!\n");
     		return;
     	} else {
 			this.boxMagazzino.getItems().addAll(this.model.comuni(regione));
 			btnRegione.setDisable(true);
 	    	this.btnOrdini.setDisable(false);
 		}
-    	
-    	
-//m
     }
 
     @FXML
@@ -121,8 +125,8 @@ public class FXMLController {
 		
     	Comuni m=this.boxMagazzino.getValue();
     	if(m==null) {
-    		txtResultSimula.appendText("Scegli un comune per il magazzino per continuare!\n");
-    		txtResultOttimizza.appendText("Scegli un comune per il magazzino per continuare!\n");
+    		txtResultSimula.appendText("ERRORE: Scegli un comune per il magazzino per continuare!\n");
+    		txtResultOttimizza.appendText("ERRORE: Scegli un comune per il magazzino per continuare!\n");
     		return;
     	}
     	this.magazzino=m;
@@ -131,8 +135,8 @@ public class FXMLController {
     	try {
 			int numConsegne = Integer.parseInt(numero);
 			if(numConsegne>this.model.comuni(regione).size()) {
-				txtResultSimula.appendText("Ordini non effettuati.\nInserisci un numero di ordini inferiore al numero di comuni per regione\n");
-				txtResultOttimizza.appendText("Ordini non effettuati.\nInserisci un numero di ordini inferiore al numero di comuni per regione\n");
+				txtResultSimula.appendText("ERRORE: Ordini non effettuati.\nInserisci un numero di ordini inferiore al numero di comuni per regione\n");
+				txtResultOttimizza.appendText("ERRORE: Ordini non effettuati.\nInserisci un numero di ordini inferiore al numero di comuni per regione\n");
 				return;
 			}
 			grafo=new SimpleWeightedGraph<Comuni,DefaultWeightedEdge>(DefaultWeightedEdge.class);
@@ -156,8 +160,8 @@ public class FXMLController {
 				this.btnSimula.setDisable(false);
 		    	this.btnOrdini.setDisable(true);
 			} else {
-				txtResultSimula.appendText("Ordini non effettuati, assicurati di aver inserito un valore almeno >0\n");
-				txtResultOttimizza.appendText("Ordini non effettuati, assicurati di aver inserito un valore almeno >0\n");
+				txtResultSimula.appendText("ERRORE: Ordini non effettuati, assicurati di aver inserito un valore almeno >0\n");
+				txtResultOttimizza.appendText("ERRORE: Ordini non effettuati, assicurati di aver inserito un valore almeno >0\n");
 			}
 		} catch (NumberFormatException ex) {
 			txtResultSimula.appendText("ERRORE: Devi inserire un numero\n");
@@ -186,6 +190,7 @@ public class FXMLController {
     		double numMinuti = Double.parseDouble(numero);
     		
         	List<Consegna> listaComuni=new ArrayList<Consegna>(model.percorsoMigliore(d, numMinuti));
+        	this.txtResultOttimizza.clear();
         	if(listaComuni.size()>0) {
         	this.txtResultOttimizza.appendText("Numero Consegne effettuate: "+(listaComuni.size()-1)+"\n");
         	} else {
@@ -202,6 +207,20 @@ public class FXMLController {
     	
     	
     }
+    
+    @FXML
+    void handlePrimo(ActionEvent event) {
+    	if(radioPrimo.isSelected()) {
+    		radioSecondo.setSelected(false);
+    	}
+    }
+
+    @FXML
+    void handleSecondo(ActionEvent event) {
+    	if(radioSecondo.isSelected()) {
+    		radioPrimo.setSelected(false);
+    	}
+    }
 
     @FXML
     void doSimulazione(ActionEvent event) {
@@ -210,25 +229,43 @@ public class FXMLController {
     	String numGio=this.txtGiornata.getText();
     	this.txtResultSimula.clear();
     	
+    	if( (this.radioPrimo.isSelected()==false ) && (this.radioSecondo.isSelected()==false) ) {
+    		this.txtResultSimula.appendText("ERRORE: Scegliere il tipo di simulazione da effettuare");
+    		return;
+    	}
+    	
     	this.txtResultSimula.appendText("Numero ordini: "+(grafo.vertexSet().size()-1)+"\n");
     	
     	try {
 			int numConsegneMax = Integer.parseInt(numCons);
 			int numVeicoli = Integer.parseInt(numVeic);
 			double giornata=Double.parseDouble(numGio);
-
-	    	List<Veicolo> listaVeicoli=new ArrayList<Veicolo>(model.Simula(numVeicoli,numConsegneMax,giornata));
+			
+	    	List<Veicolo> listaVeicoli=new ArrayList<Veicolo>();
+//	    	model.secondoAlgoritmo(numVeicoli,numConsegneMax,giornata)
+	    	
+	    	if(this.radioPrimo.isSelected()) {
+	    		listaVeicoli.addAll(model.Simula(numVeicoli,numConsegneMax,giornata));
+	    	} else {
+	    		listaVeicoli.addAll(model.secondoAlgoritmo(numVeicoli,numConsegneMax,giornata));
+	    	}
 	    	int i=0;
 	    	for (Veicolo v:listaVeicoli) {
 	    		if(v.getListaConsegna().size()>0) {
 	    			this.txtResultSimula.appendText("\nId veicolo: "+v.getIdVeicolo()+"\tNumero consegne effettuate: "+(v.getListaConsegna().size()-1)+"\n");
 	    			i=i+v.getListaConsegna().size()-1;
+	    			int j=0;
+		    		for(Consegna cons:v.getListaConsegna()) {
+		    			j++;
+		    			if(v.getListaConsegna().size()!=j) {
+		    				this.txtResultSimula.appendText("Comune: "+cons.getComune().getNomeComune()+"\t Tempo (minuti): "+cons.getTime()+"\n");
+		    			} else {
+		    				this.txtResultSimula.appendText("Ritorno al magazzino\nComune: "+cons.getComune().getNomeComune()+"\t Tempo (minuti): "+cons.getTime()+"\n");
+		    			}
+		    		}
 	    		} else {
 	    			this.txtResultSimula.appendText("\nId veicolo: "+v.getIdVeicolo()+"\tNumero consegne effettuate: "+v.getListaConsegna().size()+"\n");
 		    		i=i+v.getListaConsegna().size();
-	    		}
-	    		for(Consegna cons:v.getListaConsegna()) {
-	    			this.txtResultSimula.appendText("Comune: "+cons.getComune().getNomeComune()+"\t Tempo (minuti): "+cons.getTime()+"\n");
 	    		}
 	    	}
 	    	int nonEffe=(grafo.vertexSet().size()-1)-i;
@@ -246,6 +283,11 @@ public class FXMLController {
     	this.txtResultOttimizza.clear();
     	this.txtResultSimula.clear();
     	this.txtComuni.clear();
+    	this.txtGiornata.clear();
+    	this.txtMinutiMax.clear();
+    	this.txtNumConsegne.clear();
+    	this.txtNumConsegneMax.clear();
+    	this.txtNumVeicoli.clear();
     	
     	btnRegione.setDisable(true);
     	this.btnOrdini.setDisable(true);
@@ -258,22 +300,24 @@ public class FXMLController {
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
-        assert boxRegione != null : "fx:id=\"boxRegione\" was not injected: check your FXML file 'Untitled'.";
-        assert btnRegione != null : "fx:id=\"btnRegione\" was not injected: check your FXML file 'Untitled'.";
-        assert boxMagazzino != null : "fx:id=\"boxMagazzino\" was not injected: check your FXML file 'Untitled'.";
-        assert txtNumConsegne != null : "fx:id=\"txtNumConsegne\" was not injected: check your FXML file 'Untitled'.";
-        assert btnOrdini != null : "fx:id=\"btnOrdini\" was not injected: check your FXML file 'Untitled'.";
-        assert btnClear != null : "fx:id=\"btnClear\" was not injected: check your FXML file 'Untitled'.";
-        assert txtNumVeicoli != null : "fx:id=\"txtNumVeicoli\" was not injected: check your FXML file 'Untitled'.";
-        assert txtNumConsegneMax != null : "fx:id=\"txtNumConsegneMax\" was not injected: check your FXML file 'Untitled'.";
-        assert txtGiornata != null : "fx:id=\"txtGiornata\" was not injected: check your FXML file 'Untitled'.";
-        assert btnSimula != null : "fx:id=\"btnSimula\" was not injected: check your FXML file 'Untitled'.";
-        assert txtResultSimula != null : "fx:id=\"txtResultSimula\" was not injected: check your FXML file 'Untitled'.";
-        assert txtComuni != null : "fx:id=\"txtComuni\" was not injected: check your FXML file 'Untitled'.";
-        assert boxDestinazione != null : "fx:id=\"boxDestinazione\" was not injected: check your FXML file 'Untitled'.";
-        assert txtMinutiMax != null : "fx:id=\"txtMinutiMax\" was not injected: check your FXML file 'Untitled'.";
-        assert btnOttimizza != null : "fx:id=\"btnOttimizza\" was not injected: check your FXML file 'Untitled'.";
-        assert txtResultOttimizza != null : "fx:id=\"txtResultOttimizza\" was not injected: check your FXML file 'Untitled'.";
+        assert boxRegione != null : "fx:id=\"boxRegione\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert btnRegione != null : "fx:id=\"btnRegione\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert boxMagazzino != null : "fx:id=\"boxMagazzino\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtNumConsegne != null : "fx:id=\"txtNumConsegne\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert btnOrdini != null : "fx:id=\"btnOrdini\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert btnClear != null : "fx:id=\"btnClear\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtNumVeicoli != null : "fx:id=\"txtNumVeicoli\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtNumConsegneMax != null : "fx:id=\"txtNumConsegneMax\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtGiornata != null : "fx:id=\"txtGiornata\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert radioPrimo != null : "fx:id=\"radioPrimo\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert radioSecondo != null : "fx:id=\"radioSecondo\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert btnSimula != null : "fx:id=\"btnSimula\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtResultSimula != null : "fx:id=\"txtResultSimula\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtComuni != null : "fx:id=\"txtComuni\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert boxDestinazione != null : "fx:id=\"boxDestinazione\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtMinutiMax != null : "fx:id=\"txtMinutiMax\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert btnOttimizza != null : "fx:id=\"btnOttimizza\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtResultOttimizza != null : "fx:id=\"txtResultOttimizza\" was not injected: check your FXML file 'Scene.fxml'.";
 
     }
 
