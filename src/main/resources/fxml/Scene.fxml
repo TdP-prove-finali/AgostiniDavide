@@ -79,7 +79,7 @@
                            </font>
                         </Label>
                         <ComboBox fx:id="boxMagazzino" prefWidth="150.0" GridPane.columnIndex="1" />
-                        <Label text="Numero consegne" textFill="SNOW" GridPane.rowIndex="1">
+                        <Label text="Numero ordini" textFill="SNOW" GridPane.rowIndex="1">
                            <font>
                               <Font name="Calibri Light" size="15.0" />
                            </font>
@@ -205,7 +205,7 @@
                               <Font name="Calibri Light" size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="txtGiornata" />
+                        <TextField fx:id="txtGiornata" promptText="480" />
                         <Line endY="25.0" stroke="#388e3c">
                            <HBox.margin>
                               <Insets left="30.0" />
@@ -247,7 +247,7 @@
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                      </VBox.margin>
                      <children>
-                        <TextArea fx:id="txtResultSimula" editable="false" prefHeight="180.0" prefWidth="475.0">
+                        <TextArea fx:id="txtResultSimula" editable="false" prefHeight="180.0" prefWidth="475.0" promptText="Risultato Simulazione o errori">
                            <HBox.margin>
                               <Insets right="5.0" />
                            </HBox.margin>
@@ -259,7 +259,7 @@
                                     <Font name="Calibri" size="16.0" />
                                  </font>
                               </Label>
-                              <TextArea fx:id="txtComuni" editable="false" prefHeight="200.0" prefWidth="200.0">
+                              <TextArea fx:id="txtComuni" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="Lista Comuni degli ordini">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
@@ -332,7 +332,7 @@
                      </font>
                   </Button>
                   <Line endX="400.0" layoutX="111.0" layoutY="140.0" startX="-100.0" stroke="#388e3c" />
-                  <TextArea fx:id="txtResultOttimizza" editable="false" layoutX="25.0" layoutY="152.0" prefHeight="171.0" prefWidth="550.0">
+                  <TextArea fx:id="txtResultOttimizza" editable="false" layoutX="25.0" layoutY="152.0" prefHeight="171.0" prefWidth="550.0" promptText="Risultato Ottimizzazione o errori">
                      <VBox.margin>
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                      </VBox.margin>
