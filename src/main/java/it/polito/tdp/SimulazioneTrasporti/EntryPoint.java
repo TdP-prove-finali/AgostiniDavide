@@ -1,7 +1,7 @@
 package it.polito.tdp.SimulazioneTrasporti;
 
 import javafx.application.Application;
-import static javafx.application.Application.launch;
+
 
 import it.polito.tdp.SimulazioneTrasporti.model.Model;
 import javafx.fxml.FXMLLoader;
