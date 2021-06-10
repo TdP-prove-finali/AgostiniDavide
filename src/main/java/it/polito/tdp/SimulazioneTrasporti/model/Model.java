@@ -244,7 +244,7 @@ public class Model {
 				}
 			};
 			break;
-		case "Valle d'Aosta/VallÃ©e d'Aoste":
+		case "Valle d'Aosta/Vall\u00E9e d'Aoste":
 			for(Comuni c:grafo.vertexSet()) {
 				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiValle(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
@@ -257,7 +257,7 @@ public class Model {
 				}
 			};
 			break;
-		case "Trentino-Alto Adige/SÃ¼dtirol":
+		case "Trentino-Alto Adige/S\u00FCdtirol":
 			for(Comuni c:grafo.vertexSet()) {
 				Map<Integer,Collegamento> mappaColl=new HashMap<Integer,Collegamento>(dao.mappaCollegamentiTrentino(c.getCodiceInteroComune()));
 				for(Comuni dest:grafo.vertexSet()) {
