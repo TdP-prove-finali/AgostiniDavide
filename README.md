@@ -1,4 +1,4 @@
-# Simulazione per trasporto di merci su gomma su scala regionale.
+# Simulazione per trasporto di merci su gomma su scala regionale
 
 ## Istruzioni per l'installazione e l'utilizzo dell'applicazione
 1. Forkare e clonare sul proprio editor (IDE testato: Eclipse) il progetto al link: https://github.com/TdP-prove-finali/AgostiniDavide.
@@ -9,16 +9,16 @@
 
 ### Istruzioni per la creazione del database
 Data l'enorme quantità di dati presenti nel data-set github ha impedito il caricamento del file sql completo e perciò tale operazione richiede lo svolgimento dei passaggi sotto elencati.
-1. Creare sul proprio server locale il database con nome "comuni".
-2. Importare tutte le tabelle presenti nella cartella "DB" al link: https://github.com/TdP-prove-finali/AgostiniDavide/tree/master/DB. \
+1. Accedere al link dropbox https://www.dropbox.com/sh/5imnidtgxesvh2j/AACDecSIiVGNmNo5eka_Kju1a?dl=0 e provare ad importare il file sql del data-set presente nella tabella cartella "DB_completo".
+2. In caso di problemi creare sul proprio server locale il database con nome "comuni".
+3. Importare tutte le tabelle presenti nella cartella "DB" al link: https://github.com/TdP-prove-finali/AgostiniDavide/tree/master/DB. \
 Le varie tabelle sono riportate in file .zip e ciascuna contiene il file .sql che si richiede di importare.
-3. Data la grande quantità di casi talvolta può impiegare troppo tempo o il processo di importazione mostra dei problemi.\
+4. Data la grande quantità di casi talvolta può impiegare troppo tempo o il processo di importazione mostra dei problemi.\
 Se il problema persiste e le tabelle risultano essere state create vuote allora assicurarsi di svuotarle.\
 Nel caso in cui le tabelle non siano state create allora crearle tutte manualmente con i nomi dei file sql.
-4. Successivamente accedere al link dropbox: https://www.dropbox.com/sh/5imnidtgxesvh2j/AACDecSIiVGNmNo5eka_Kju1a?dl=0. \
+5. Successivamente accedere al link dropbox: https://www.dropbox.com/sh/5imnidtgxesvh2j/AACDecSIiVGNmNo5eka_Kju1a?dl=0. \
 Nel link sono presenti file .csv delle varie regioni che bisogna importare nelle rispettive tabelle. \
-(E' inoltre presente nel link il file .sql completo che richiede un enorme quantità di tempo per essere scaricato e può provocare gli errori prima descritti.)
-5. Importare i file .csv nelle rispettive tabelle con le seguenti specifiche (dovrebbe essere automatico):
+6. Importare i file .csv nelle rispettive tabelle con le seguenti specifiche (dovrebbe essere automatico):
 * Codifica UTF-8 Unicode.
 * Ignorare le prime 1 linee.
 * Campi terminati da ;
